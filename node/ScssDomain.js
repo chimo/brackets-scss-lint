@@ -1,7 +1,7 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, node: true */
 
 (function () {
-    
+
     "use strict";
 
     var exec = require("child_process").exec,
@@ -9,11 +9,11 @@
         os   = require("os");
 
     // Run external scss-lint command
-    function cmdBuild(scssFile, projectRoot, callback) {
+    function cmdBuild(scssFile, projectRoot, configFile, callback) {
 
         var tmpdir          = os.tmpdir() + "/scss-lint",
             logfile         = projectRoot + "~scss-lint.tmp",
-            _configFileName = projectRoot + ".scss-lint.yml",
+            configSwitch    = "",
             cmd;
 
         // The scss-lint gem ( https://rubygems.org/gems/scss-lint ) operates
@@ -25,12 +25,16 @@
             fs.mkdir(tmpdir);
         }
 
+        if (configFile !== null) {
+            configSwitch = "-c " + configFile;
+        }
+
         // Copy file in there
         // FIXME: error handling
         fs.createReadStream(scssFile).pipe(fs.createWriteStream(tmpdir + "/tmp.scss"));
 
         // Build command
-        cmd = "scss-lint -f JSON -c " + _configFileName + " " + tmpdir + " > " + logfile;
+        cmd = "scss-lint -f JSON " + configSwitch + " " + tmpdir + " > " + logfile;
 
         // Call external scss-lint command
         exec(cmd, function () {

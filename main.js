@@ -25,33 +25,32 @@ define(function (require, exports, module) {
             exclude,
             i, len,
             relFilepath = fullPath.replace(projectRoot, ""), // Path to scss file relative to project root
-            configFileName = projectRoot + ".scss-lint.yml",
+            configFile = projectRoot + ".scss-lint.yml",
             configContent;
 
         // Read the configuration file
-        FileSystem.getFileForPath(configFileName).read(function (error, data) {
-            // Print error to console if any
-            if (error) {
-                console.log(error);
-            }
+        FileSystem.getFileForPath(configFile).read(function (error, data) {
+            if (!error) {
+               // Parse config file
+                configContent = yaml.safeLoad(data);
 
-            // Parse config file
-            configContent = yaml.safeLoad(data);
+                // Get the list of excluded files
+                excludes = configContent.exclude;
 
-            // Get the list of excluded files
-            excludes = configContent.exclude;
+                // Terminate if we're currently looking at an excluded file
+                for (i = 0, len = excludes.length; i < len; i += 1) {
+                    exclude = excludes[i];
 
-            // Terminate if we're currently looking at an excluded file
-            for (i = 0, len = excludes.length; i < len; i += 1) {
-                exclude = excludes[i];
-
-                if (relFilepath === exclude) {
-                    return;
+                    if (relFilepath === exclude) {
+                        return;
+                    }
                 }
+            } else {
+                configFile = null;
             }
 
-            // Otherwise scss-lint the file
-            scssDomain.exec("build", fullPath, projectRoot)
+            // scss-lint the file if not excluded
+            scssDomain.exec("build", fullPath, projectRoot, configFile)
                 .fail(function (err) {
                     console.error("[brackets-scss-lint] failed to run scss-lint", err);
 
@@ -76,7 +75,7 @@ define(function (require, exports, module) {
                     }
 
                     errors = json[filepath];
-                
+
                     for (i = 0, len = errors.length; i < len; i += 1) {
                         error = errors[i];
                         severity = (error.severity === "warning") ? CodeInspection.Type.WARNING : CodeInspection.Type.ERROR;
@@ -102,5 +101,5 @@ define(function (require, exports, module) {
         name: "SCSS Lint",
         scanFileAsync: handleHinterAsync
     });
-    
+
 });
