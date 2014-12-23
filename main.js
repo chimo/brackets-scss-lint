@@ -72,7 +72,7 @@ define(function (require, exports, module) {
                     }
 
                     if (filepath === undefined) {
-                        def.resolve(null);
+                        return def.resolve(null);
                     }
 
                     errors = json[filepath];
@@ -91,7 +91,7 @@ define(function (require, exports, module) {
                         });
                     }
 
-                    def.resolve({errors: results});
+                    return def.resolve({errors: results});
                 });
          });
 
