@@ -8,6 +8,7 @@ define(function (require, exports, module) {
         ProjectManager  = brackets.getModule("project/ProjectManager"),
         FileSystem      = brackets.getModule("filesystem/FileSystem"),
         scssDomain      = new NodeDomain("scss", ExtensionUtils.getModulePath(module, "node/ScssDomain")),
+        fnmatch         = brackets.getModule("thirdparty/globmatch"),
         yaml = require("js-yaml");
 
     /**
@@ -41,8 +42,8 @@ define(function (require, exports, module) {
                 for (i = 0, len = excludes.length; i < len; i += 1) {
                     exclude = excludes[i];
 
-                    if (relFilepath === exclude) {
-                        return;
+                    if (fnmatch(relFilepath, exclude)) {
+                        return def.resolve(null);
                     }
                 }
             } else {
