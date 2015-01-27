@@ -16,7 +16,7 @@
         }
 
         // Build command
-        cmd = "scss-lint -f JSON " + configSwitch + " " + scssFile;
+        cmd = "scss-lint -f JSON " + configSwitch + " \"" + scssFile + "\"";
 
         // Call external scss-lint command
         // Exit codes: https://github.com/causes/scss-lint/blob/1fcce198f9a6281952f8af4961f2655ec29e683e/lib/scss_lint/cli.rb#L13
