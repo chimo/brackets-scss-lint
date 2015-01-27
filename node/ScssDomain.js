@@ -4,48 +4,52 @@
 
     "use strict";
 
-    var exec = require("child_process").exec,
-        fs   = require("fs"),
-        os   = require("os");
+    var exec = require("child_process").exec;
 
     // Run external scss-lint command
     function cmdBuild(scssFile, projectRoot, configFile, callback) {
-
-        var tmpdir          = os.tmpdir() + "/scss-lint",
-            tmpfile         = tmpdir + "/tmp.scss",
-            logfile         = projectRoot + "scss-lint.log",
-            configSwitch    = "",
+        var configSwitch = "",
             cmd;
-
-        // The scss-lint gem ( https://rubygems.org/gems/scss-lint ) operates
-        // on directories, so we copy the contents of the current file to
-        // "scss-lint/tmp.scss" in the OS's temporary directory...
-
-        // Create tmp dir if it doesn't exist
-        if (!fs.existsSync(tmpdir)) {
-            fs.mkdir(tmpdir);
-        }
 
         if (configFile !== null) {
             configSwitch = "-c " + configFile;
         }
 
-        // Copy file in there
-        // FIXME: error handling
-        fs.createReadStream(scssFile).pipe(fs.createWriteStream(tmpfile));
-
         // Build command
-        cmd = "scss-lint -f JSON " + configSwitch + " " + tmpdir + " > " + logfile;
+        cmd = "scss-lint -f JSON " + configSwitch + " " + scssFile;
 
         // Call external scss-lint command
-        exec(cmd, function () {
-            fs.readFile(logfile, function (error, data) {
-                // After we're done, delete tmp file
-                fs.unlink(tmpfile);
+        // Exit codes: https://github.com/causes/scss-lint/blob/1fcce198f9a6281952f8af4961f2655ec29e683e/lib/scss_lint/cli.rb#L13
+        exec(cmd, function (error, stdout/*, stderr*/) {
+            var message;
 
-                // Pass data to callback
-                callback(error, data.toString());
-            });
+            // These error codes are okay
+            if (error === null || error.code === 1 || error.code === 2) {
+                callback(false, stdout);
+            } else {
+                switch(error.code) {
+                    case 64:
+                        message = "Command line usage error";
+                        break;
+
+                    case 66:
+                        message = "Input file did not exist or was not readable";
+                        break;
+
+                    case 70:
+                        message = "Internal software error";
+                        break;
+
+                    case 78:
+                        message = "Configuration error";
+                        break;
+
+                    default:
+                        message = "Unknown error";
+                }
+
+                callback(message);
+            }
         });
     }
 

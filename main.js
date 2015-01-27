@@ -1,4 +1,4 @@
-/*global define: false, brackets: false, $: false, console: false*/
+/*global define: false, brackets: false, $: false*/
 define(function (require, exports, module) {
     "use strict";
 
@@ -53,9 +53,7 @@ define(function (require, exports, module) {
             // scss-lint the file if not excluded
             scssDomain.exec("build", fullPath, projectRoot, configFile)
                 .fail(function (err) {
-                    console.error("[brackets-scss-lint] failed to run scss-lint", err);
-
-                    return err;
+                    return def.reject(err);
                 })
                 .done(function (result) {
                     var json = JSON.parse(result),
