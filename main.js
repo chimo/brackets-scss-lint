@@ -38,12 +38,14 @@ define(function (require, exports, module) {
                 // Get the list of excluded files
                 excludes = configContent.exclude;
 
-                // Terminate if we're currently looking at an excluded file
-                for (i = 0, len = excludes.length; i < len; i += 1) {
-                    exclude = excludes[i];
+                if (excludes) {
+                    // Terminate if we're currently looking at an excluded file
+                    for (i = 0, len = excludes.length; i < len; i += 1) {
+                        exclude = excludes[i];
 
-                    if (fnmatch(relFilepath, exclude)) {
-                        return def.resolve(null);
+                        if (fnmatch(relFilepath, exclude)) {
+                            return def.resolve(null);
+                        }
                     }
                 }
             } else {
