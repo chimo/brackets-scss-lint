@@ -19,7 +19,7 @@
         cmd = "scss-lint -f JSON " + configSwitch + " \"" + scssFile + "\"";
 
         // Call external scss-lint command
-        // Exit codes: https://github.com/causes/scss-lint/blob/1fcce198f9a6281952f8af4961f2655ec29e683e/lib/scss_lint/cli.rb#L13
+        // Exit codes: https://github.com/brigade/scss-lint/blob/14ea8408dbdd867f33482825d6ccb80f841fbe19/lib/scss_lint/cli.rb#L11
         exec(cmd, function (error, stdout/*, stderr*/) {
             var message;
 
@@ -42,6 +42,14 @@
 
                     case 78:
                         message = "Configuration error";
+                        break;
+
+                    case 80:
+                        message = "No files matched by specified glob patterns";
+                        break;
+
+                    case 81:
+                        message = "This file is filtered by exclusions";
                         break;
 
                     default:
