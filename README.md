@@ -6,7 +6,7 @@ SCSS linter for Brackets
 ## Requirements
 * [Brackets](http://brackets.io/) (tested with v0.44+)
 * [Ruby 1.9.3+](https://www.ruby-lang.org)
-* [scss-lint 0.29.0+](https://github.com/causes/scss-lint)
+* [scss-lint](https://github.com/causes/scss-lint) (tested with 0.37.0)
   * (use `gem install scss-lint` after installing Ruby)
 
 ## Configuration
