@@ -54,6 +54,10 @@
 
                     default:
                         message = error.toString();
+
+                        if (message.indexOf("maxBuffer exceeded") !== -1) {
+                            message = "Too many errors. Try a smaller file or setting scsslint.maxBuffer config. ( See: https://github.com/chimo/brackets-scss-lint/blob/master/README.md )";
+                        }
                 }
 
                 callback(message);
