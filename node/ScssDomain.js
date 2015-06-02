@@ -53,7 +53,7 @@
                         break;
 
                     default:
-                        message = "Unknown error";
+                        message = error.toString();
                 }
 
                 callback(message);
