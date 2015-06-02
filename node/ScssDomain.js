@@ -7,7 +7,7 @@
     var exec = require("child_process").exec;
 
     // Run external scss-lint command
-    function cmdBuild(scssFile, projectRoot, configFile, callback) {
+    function cmdBuild(scssFile, projectRoot, configFile, gemDir, maxExecBuffer, callback) {
         var configSwitch = "",
             cmd;
 
@@ -16,11 +16,11 @@
         }
 
         // Build command
-        cmd = "scss-lint -f JSON " + configSwitch + " \"" + scssFile + "\"";
+        cmd = gemDir + "scss-lint -f JSON " + configSwitch + " \"" + scssFile + "\"";
 
         // Call external scss-lint command
         // Exit codes: https://github.com/brigade/scss-lint/blob/14ea8408dbdd867f33482825d6ccb80f841fbe19/lib/scss_lint/cli.rb#L11
-        exec(cmd, function (error, stdout/*, stderr*/) {
+        exec(cmd, { maxBuffer: maxExecBuffer }, function (error, stdout/*, stderr*/) {
             var message;
 
             // These error codes are okay
@@ -73,7 +73,7 @@
             cmdBuild,
             true,
             "Runs scss linter",
-            ["scssFile", "projectRoot"],
+            ["scssFile", "projectRoot", "configFile", "gemDir", "maxExecBuffer"],
             [{
                 name: "result",
                 type: "string",

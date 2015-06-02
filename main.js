@@ -7,6 +7,10 @@ define(function (require, exports, module) {
         NodeDomain      = brackets.getModule("utils/NodeDomain"),
         ProjectManager  = brackets.getModule("project/ProjectManager"),
         FileSystem      = brackets.getModule("filesystem/FileSystem"),
+        PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
+        prefs = PreferencesManager.getExtensionPrefs("scsslint"),
+        gemDir = prefs.get("gemDir") || "",
+        maxExecBuffer = prefs.get("maxExecBuffer") || 200 * 1024,
         scssDomain      = new NodeDomain("scss", ExtensionUtils.getModulePath(module, "node/ScssDomain"));
 
     /**
@@ -27,7 +31,7 @@ define(function (require, exports, module) {
                     configFile = null;
                 }
 
-                scssDomain.exec("build", fullPath, projectRoot, configFile)
+                scssDomain.exec("build", fullPath, projectRoot, configFile, gemDir, maxExecBuffer)
                     .fail(function (err) {
                         return def.reject(err);
                     })
