@@ -20,11 +20,11 @@
 
         // Call external scss-lint command
         // Exit codes: https://github.com/brigade/scss-lint/blob/14ea8408dbdd867f33482825d6ccb80f841fbe19/lib/scss_lint/cli.rb#L11
-        exec(cmd, { maxBuffer: maxExecBuffer }, function (error, stdout/*, stderr*/) {
+        exec(cmd, { maxBuffer: maxExecBuffer }, function (error, stdout, stderr) {
             var message;
 
             // These error codes are okay
-            if (error === null || error.code === 1 || error.code === 2) {
+            if (!stderr && (error === null || error.code === 1 || error.code === 2)) {
                 callback(false, stdout);
             } else {
                 switch(error.code) {
