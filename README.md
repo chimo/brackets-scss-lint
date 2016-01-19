@@ -14,7 +14,7 @@ Put your scss-lint rules in a file named `.scss-lint.yml` in the root of your pr
 
 ## brackets-scss-lint Configuration
 
-The extension has two configuration options you can set in your
+The extension has three configuration options you can set in your
 [Brackets preferences file](https://github.com/adobe/brackets/wiki/How-to-Use-Brackets#preferences).
 
 If brackets-scss-lint can't find your scss-lint gem, you can tell it where it's
@@ -37,3 +37,14 @@ you can increase the default Node buffer size via the following option:
 ```
 
 The default execMaxBuffer value is 204800
+
+---
+
+You can change the default location of you linting configuration file. 
+The location is in reference to the project base directory.
+
+```json
+"scsslint.configFile": ".scss-lint.yml"
+```
+
+The default is `.scss-lint.yml`
