@@ -40,7 +40,7 @@ The default execMaxBuffer value is 204800
 
 ---
 
-You can change the default location of you linting configuration file. 
+You can change the default location of your linting configuration file. 
 The location is in reference to the project base directory.
 
 ```json
